@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import react from '@astrojs/react';
 
 // On GitHub Actions, derive the Pages URL from the repository name so a
 // project site (owner.github.io/repo) gets the right base path. Locally the
@@ -11,4 +12,5 @@ export default defineConfig({
   output: 'static',
   site: owner ? `https://${owner}.github.io` : undefined,
   base: owner && !isUserSite ? `/${repo}` : undefined,
+  integrations: [react()],
 });

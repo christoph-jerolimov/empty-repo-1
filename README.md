@@ -19,7 +19,7 @@ Requires Node 22.12 or newer.
 - `src/pages/index.astro` — Sheet 01, the home page.
 - `src/pages/dwg/[id].astro` — Sheet 02, one prerendered detail page per project (`/dwg/ledger/`, …).
 - `src/layouts/Sheet.astro` — shared shell: fonts, theme bootstrap, header strip, theme chooser.
-- `src/components/ThemeChooser.astro` — the fixed swatch panel and its client script.
+- `src/components/ThemeChooser.tsx` — the fixed swatch panel, a React island (`client:load`) that owns selection, persistence, keyboard navigation and collapse.
 - `src/styles/global.css` — all styling. Every colour derives from `--bg` and `--ink`.
 
 ## Themes

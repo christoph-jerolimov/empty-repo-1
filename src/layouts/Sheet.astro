@@ -1,7 +1,7 @@
 ---
 // Page shell shared by both sheets: fonts, theme bootstrap, header strip and chooser.
 import '../styles/global.css';
-import ThemeChooser from '../components/ThemeChooser.astro';
+import ThemeChooser from '../components/ThemeChooser';
 import { SITE, THEMES } from '../data/site';
 import { url } from '../lib/url';
 
@@ -68,6 +68,6 @@ const bootThemes = THEMES.map(({ id, bg, ink, bar }) => ({ id, bg, ink, bar }));
       </main>
     </div>
 
-    <ThemeChooser />
+    <ThemeChooser client:load />
   </body>
 </html>
