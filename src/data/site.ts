@@ -1,7 +1,40 @@
-// Site content and theme palette. Edit here to change what the page shows.
-// `bar` is an optional accent stripe drawn across the top of the sheet.
+// Site content and theme palette. Edit here to change what the pages show.
 
-var THEMES = [
+export interface Theme {
+  id: string;
+  name: string;
+  bg: string;
+  ink: string;
+  /** Optional accent stripe drawn across the top of the sheet. */
+  bar?: string;
+}
+
+export interface Project {
+  id: string;
+  no: string;
+  year: string;
+  name: string;
+  diagram: string;
+  summary: string;
+  stack: string;
+  metric: string;
+  role: string;
+  duration: string;
+  problem: string;
+  approach: string;
+  source: string;
+}
+
+export const SITE = {
+  owner: 'Christoph',
+  title: 'Christoph — Software Engineer',
+  description: 'Christoph, a software engineer who builds backend systems and developer tooling.',
+  email: 'hello@christoph.dev',
+  github: 'https://github.com/christoph',
+  linkedin: 'https://www.linkedin.com/in/christoph',
+};
+
+export const THEMES: Theme[] = [
   { id: 'classic', name: 'Classic blue', bg: '#17478f', ink: '#f2f6ff' },
   { id: 'navy', name: 'Navy', bg: '#0b1f3f', ink: '#dbe6ff' },
   { id: 'light', name: 'Light paper', bg: '#f4f2ea', ink: '#1a3f8a' },
@@ -32,39 +65,39 @@ var THEMES = [
   { id: 'lasergrid', name: 'Laser grid', bg: '#000814', ink: '#ff2bd6', bar: 'linear-gradient(90deg,#ff2bd6,#00e5ff)' },
   { id: 'ukraine', name: 'Ukraine', bg: '#0057b7', ink: '#ffd700', bar: 'linear-gradient(180deg,#0057b7 50%,#ffd700 50%)' },
   { id: 'pride', name: 'Pride', bg: '#141418', ink: '#ffffff', bar: 'linear-gradient(90deg,#e40303 0 16.6%,#ff8c00 0 33.3%,#ffed00 0 50%,#008026 0 66.6%,#24408e 0 83.3%,#732982 0)' },
-  { id: 'rainbow', name: 'Rainbow paper', bg: '#faf8f2', ink: '#222222', bar: 'linear-gradient(90deg,#ff004d,#ff8a00,#ffe600,#00c853,#00b0ff,#7c4dff,#ff004d)' }
+  { id: 'rainbow', name: 'Rainbow paper', bg: '#faf8f2', ink: '#222222', bar: 'linear-gradient(90deg,#ff004d,#ff8a00,#ffe600,#00c853,#00b0ff,#7c4dff,#ff004d)' },
 ];
 
-var PROJECTS = [
+export const PROJECTS: Project[] = [
   { id: 'ledger', no: '01', year: '2025', name: 'Ledger Core', diagram: 'event pipeline', summary: 'Double-entry ledger service processing 40k transactions/sec with exactly-once guarantees.', stack: 'Go · Kafka · Postgres', metric: '40k tx / sec · p99 12 ms', role: 'Tech lead', duration: '14 months', problem: 'Legacy ledger drifted from the source of truth under load, forcing nightly reconciliation runs.', approach: 'Idempotent event consumers, outbox pattern, and a compacted changelog that made replay a first-class operation.', source: '#' },
   { id: 'relay', no: '02', year: '2024', name: 'Relay CLI', diagram: 'command graph', summary: 'Developer tool that turns service manifests into local environments in under a minute.', stack: 'Rust · Docker · gRPC', metric: '< 60 s cold start', role: 'Creator', duration: '8 months', problem: 'Onboarding a new engineer took two days of environment setup and tribal knowledge.', approach: 'Declarative manifests, cached image layers, and a dependency graph resolver with clear failure messages.', source: '#' },
   { id: 'atlas', no: '03', year: '2023', name: 'Atlas Search', diagram: 'index shards', summary: 'Product search rebuilt on a sharded inverted index with typo-tolerant ranking.', stack: 'TypeScript · Elasticsearch · Node', metric: '3× relevance lift', role: 'Senior engineer', duration: '10 months', problem: 'Search returned zero results for a fifth of queries due to strict matching.', approach: 'Custom analyzers, learned synonyms from click logs, and offline evaluation harness before every release.', source: '#' },
-  { id: 'meter', no: '04', year: '2022', name: 'Meter', diagram: 'metrics fan-in', summary: 'Usage-based billing pipeline aggregating events from 300 services into invoices.', stack: 'Python · Flink · BigQuery', metric: '300 services · 0 missed invoices', role: 'Engineer', duration: '6 months', problem: 'Billing depended on hand-maintained SQL and broke silently every month-end.', approach: 'Streaming aggregation with late-event windows and contract tests on every emitting service.', source: '#' }
+  { id: 'meter', no: '04', year: '2022', name: 'Meter', diagram: 'metrics fan-in', summary: 'Usage-based billing pipeline aggregating events from 300 services into invoices.', stack: 'Python · Flink · BigQuery', metric: '300 services · 0 missed invoices', role: 'Engineer', duration: '6 months', problem: 'Billing depended on hand-maintained SQL and broke silently every month-end.', approach: 'Streaming aggregation with late-event windows and contract tests on every emitting service.', source: '#' },
 ];
 
-var SKILLS = [
+export const SKILLS = [
   { k: 'Languages', v: 'Go, Rust, TypeScript, Python' },
   { k: 'Data', v: 'Postgres, Kafka, Flink, Redis' },
   { k: 'Infra', v: 'Kubernetes, Terraform, AWS' },
   { k: 'Practice', v: 'Observability, testing, incident review' },
-  { k: 'Interests', v: 'Distributed systems, DX tooling' }
+  { k: 'Interests', v: 'Distributed systems, DX tooling' },
 ];
 
-var EXPERIENCE = [
+export const EXPERIENCE = [
   { years: '2023 — now', role: 'Staff Engineer', company: 'Northline Payments', note: 'Own the ledger and settlement platform. Lead a team of six; set technical direction across three squads.' },
   { years: '2020 — 2023', role: 'Senior Engineer', company: 'Kepler Commerce', note: 'Rebuilt search and catalog services; introduced on-call practices and blameless post-mortems.' },
-  { years: '2018 — 2020', role: 'Software Engineer', company: 'Fabrik Studio', note: 'Full-stack work for early-stage clients, from data modelling to deployment.' }
+  { years: '2018 — 2020', role: 'Software Engineer', company: 'Fabrik Studio', note: 'Full-stack work for early-stage clients, from data modelling to deployment.' },
 ];
 
-var POSTS = [
+export const POSTS = [
   { title: 'Exactly-once is a spectrum', date: 'Jun 2026', href: '#' },
   { title: 'Why I write runbooks before code', date: 'Feb 2026', href: '#' },
   { title: 'Reading a flame graph in five minutes', date: 'Nov 2025', href: '#' },
-  { title: 'Small services, big contracts', date: 'Jul 2025', href: '#' }
+  { title: 'Small services, big contracts', date: 'Jul 2025', href: '#' },
 ];
 
-var OSS = [
+export const OSS = [
   { name: 'relay', desc: 'local environments from manifests', stars: '2.1k', href: '#' },
   { name: 'pgtrace', desc: 'Postgres query tracing for Go', stars: '640', href: '#' },
-  { name: 'kafka-outbox', desc: 'transactional outbox helpers', stars: '380', href: '#' }
+  { name: 'kafka-outbox', desc: 'transactional outbox helpers', stars: '380', href: '#' },
 ];

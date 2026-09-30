@@ -1,0 +1,72 @@
+---
+// Page shell shared by both sheets: fonts, theme bootstrap, header strip and chooser.
+import '../styles/global.css';
+import ThemeChooser from '../components/ThemeChooser.astro';
+import { SITE, THEMES } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** "01" for the home sheet, "02" for a project detail sheet. */
+  sheet: '01' | '02';
+}
+
+const { title, description = SITE.description, sheet } = Astro.props;
+const defaultTheme = THEMES[0];
+const bootThemes = THEMES.map(({ id, bg, ink, bar }) => ({ id, bg, ink, bar }));
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content={defaultTheme.bg} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Archivo:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Apply the saved theme before first paint to avoid a flash of the default. -->
+    <script is:inline define:vars={{ themes: bootThemes }}>
+      (function () {
+        var id = null;
+        try { id = localStorage.getItem('blueprint-theme'); } catch (e) {}
+        var t = themes.find(function (x) { return x.id === id; }) || themes[0];
+        var s = document.documentElement.style;
+        s.setProperty('--bg', t.bg);
+        s.setProperty('--ink', t.ink);
+        if (t.bar) { s.setProperty('--bar', t.bar); document.documentElement.dataset.bar = ''; }
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="sheet">
+      <div class="sheet-bar" aria-hidden="true"></div>
+
+      <header class="strip">
+        <a href="/" class="brand">
+          <span class="brand-mark" aria-hidden="true"><span></span></span>
+          {SITE.owner} / Software Engineer
+        </a>
+        <span class="strip-sheet">Sheet {sheet} of 02</span>
+        <nav class="strip-nav" aria-label="Sections">
+          <a href="/#about">About</a>
+          <a href="/#projects">Projects</a>
+          <a href="/#experience">Experience</a>
+          <a href="/#writing">Writing</a>
+          <a href="/#contact">Contact</a>
+        </nav>
+      </header>
+
+      <main id="view">
+        <slot />
+      </main>
+    </div>
+
+    <ThemeChooser />
+  </body>
+</html>

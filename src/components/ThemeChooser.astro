@@ -1,0 +1,121 @@
+---
+// Fixed bottom-left swatch panel. Swatches are rendered at build time; the
+// script only toggles the active one and writes the chosen colours to :root.
+import { THEMES } from '../data/site';
+
+const pad2 = (n: number) => String(n).padStart(2, '0');
+---
+
+<aside class="themes" aria-label="Theme chooser" data-theme-panel>
+  <div class="themes-head">
+    <span>Theme — <span data-theme-name>{THEMES[0].name}</span></span>
+    <span class="themes-tools">
+      <span data-theme-count>{pad2(1)} / {pad2(THEMES.length)}</span>
+      <button type="button" class="themes-toggle" aria-expanded="true" aria-controls="theme-list" data-theme-toggle>Hide</button>
+    </span>
+  </div>
+  <div class="themes-list" id="theme-list" role="radiogroup" aria-label="Color theme">
+    {THEMES.map((t, i) => (
+      <button
+        type="button"
+        class="swatch"
+        role="radio"
+        aria-checked={i === 0 ? 'true' : 'false'}
+        tabindex={i === 0 ? 0 : -1}
+        title={t.name}
+        aria-label={t.name}
+        data-id={t.id}
+        data-name={t.name}
+        data-bg={t.bg}
+        data-ink={t.ink}
+        data-bar={t.bar}
+        style={`--sw-bg:${t.bg};--sw-ink:${t.ink}${t.bar ? `;--sw-bar:${t.bar}` : ''}`}
+      />
+    ))}
+  </div>
+</aside>
+
+<script>
+  const THEME_KEY = 'blueprint-theme';
+  const PANEL_KEY = 'blueprint-theme-panel';
+
+  const panel = document.querySelector<HTMLElement>('[data-theme-panel]')!;
+  const list = panel.querySelector<HTMLElement>('#theme-list')!;
+  const nameEl = panel.querySelector<HTMLElement>('[data-theme-name]')!;
+  const countEl = panel.querySelector<HTMLElement>('[data-theme-count]')!;
+  const toggle = panel.querySelector<HTMLButtonElement>('[data-theme-toggle]')!;
+  const themeColor = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+  const swatches = Array.from(list.querySelectorAll<HTMLButtonElement>('.swatch'));
+
+  const pad2 = (n: number) => String(n).padStart(2, '0');
+
+  function applyTheme(btn: HTMLButtonElement) {
+    const { bg, ink, bar, name } = btn.dataset;
+    const root = document.documentElement;
+    root.style.setProperty('--bg', bg!);
+    root.style.setProperty('--ink', ink!);
+    if (bar) {
+      root.style.setProperty('--bar', bar);
+      root.dataset.bar = '';
+    } else {
+      root.style.removeProperty('--bar');
+      delete root.dataset.bar;
+    }
+    themeColor?.setAttribute('content', bg!);
+    nameEl.textContent = name!;
+    countEl.textContent = `${pad2(swatches.indexOf(btn) + 1)} / ${pad2(swatches.length)}`;
+    for (const s of swatches) {
+      const on = s === btn;
+      s.setAttribute('aria-checked', on ? 'true' : 'false');
+      s.tabIndex = on ? 0 : -1;
+    }
+  }
+
+  function pickTheme(btn: HTMLButtonElement, focus = false) {
+    applyTheme(btn);
+    try { localStorage.setItem(THEME_KEY, btn.dataset.id!); } catch {}
+    if (focus) btn.focus();
+  }
+
+  list.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.swatch');
+    if (btn) pickTheme(btn);
+  });
+
+  // Arrow keys move through the swatches, as in any radio group.
+  list.addEventListener('keydown', (e) => {
+    const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[e.key];
+    if (!step) return;
+    e.preventDefault();
+    const i = swatches.indexOf(document.activeElement as HTMLButtonElement);
+    pickTheme(swatches[(i + step + swatches.length) % swatches.length], true);
+  });
+
+  // Collapsible panel; the page keeps enough bottom padding to scroll clear of it.
+  function setCollapsed(collapsed: boolean) {
+    panel.classList.toggle('collapsed', collapsed);
+    toggle.textContent = collapsed ? 'Show' : 'Hide';
+    toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+  }
+
+  toggle.addEventListener('click', () => {
+    const collapsed = !panel.classList.contains('collapsed');
+    setCollapsed(collapsed);
+    try { localStorage.setItem(PANEL_KEY, collapsed ? 'collapsed' : 'open'); } catch {}
+  });
+
+  function reservePanelSpace() {
+    document.body.style.paddingBottom = `${Math.max(24, panel.offsetHeight + 32)}px`;
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(reservePanelSpace).observe(panel);
+  reservePanelSpace();
+
+  let saved: string | null = null;
+  let panelState: string | null = null;
+  try {
+    saved = localStorage.getItem(THEME_KEY);
+    panelState = localStorage.getItem(PANEL_KEY);
+  } catch {}
+  setCollapsed(panelState === 'collapsed');
+  applyTheme(swatches.find((s) => s.dataset.id === saved) ?? swatches[0]);
+</script>
