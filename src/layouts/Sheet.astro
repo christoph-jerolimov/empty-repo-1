@@ -3,6 +3,7 @@
 import '../styles/global.css';
 import ThemeChooser from '../components/ThemeChooser.astro';
 import { SITE, THEMES } from '../data/site';
+import { url } from '../lib/url';
 
 interface Props {
   title: string;
@@ -48,17 +49,17 @@ const bootThemes = THEMES.map(({ id, bg, ink, bar }) => ({ id, bg, ink, bar }));
       <div class="sheet-bar" aria-hidden="true"></div>
 
       <header class="strip">
-        <a href="/" class="brand">
+        <a href={url('/')} class="brand">
           <span class="brand-mark" aria-hidden="true"><span></span></span>
           {SITE.owner} / Software Engineer
         </a>
         <span class="strip-sheet">Sheet {sheet} of 02</span>
         <nav class="strip-nav" aria-label="Sections">
-          <a href="/#about">About</a>
-          <a href="/#projects">Projects</a>
-          <a href="/#experience">Experience</a>
-          <a href="/#writing">Writing</a>
-          <a href="/#contact">Contact</a>
+          <a href={url('/#about')}>About</a>
+          <a href={url('/#projects')}>Projects</a>
+          <a href={url('/#experience')}>Experience</a>
+          <a href={url('/#writing')}>Writing</a>
+          <a href={url('/#contact')}>Contact</a>
         </nav>
       </header>
 

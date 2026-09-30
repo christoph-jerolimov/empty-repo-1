@@ -25,3 +25,9 @@ Requires Node 22.12 or newer.
 ## Themes
 
 31 themes are defined in `src/data/site.ts`. The chosen theme is stored in `localStorage` and applied before first paint. Themes with a `bar` gradient also draw an accent stripe along the top of the sheet.
+
+## Deploy
+
+`.github/workflows/deploy.yml` builds the site and publishes `dist/` to GitHub Pages on every push to `main` (or manually via *Run workflow*). One-time setup: in the repository's **Settings → Pages**, set *Source* to **GitHub Actions**.
+
+`astro.config.mjs` reads `GITHUB_REPOSITORY` during the build to set the site URL and base path, so a project site is served correctly from `https://<owner>.github.io/<repo>/`. Links in the source go through `src/lib/url.ts` to pick up that base.

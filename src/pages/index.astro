@@ -3,6 +3,7 @@
 import Sheet from '../layouts/Sheet.astro';
 import Dimension from '../components/Dimension.astro';
 import { SITE, PROJECTS, SKILLS, EXPERIENCE, POSTS, OSS } from '../data/site';
+import { url } from '../lib/url';
 
 const stripUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '');
 ---
@@ -51,7 +52,7 @@ const stripUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '');
     </div>
     <div class="cards">
       {PROJECTS.map((p) => (
-        <a class="card" href={`/dwg/${p.id}/`}>
+        <a class="card" href={url(`/dwg/${p.id}/`)}>
           <div class="card-meta"><span>Dwg {p.no}</span><span>{p.year}</span></div>
           <div class="hatch" aria-hidden="true">{p.diagram}</div>
           <div class="card-name">{p.name}</div>

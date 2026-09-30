@@ -3,6 +3,7 @@
 import Sheet from '../../layouts/Sheet.astro';
 import Dimension from '../../components/Dimension.astro';
 import { SITE, PROJECTS } from '../../data/site';
+import { url } from '../../lib/url';
 
 export function getStaticPaths() {
   return PROJECTS.map((project, i) => ({
@@ -16,7 +17,7 @@ const { project: p, next } = Astro.props;
 
 <Sheet title={`${p.name} — ${SITE.owner}`} description={p.summary} sheet="02">
   <section class="detail">
-    <a class="back" href="/#projects">← Back to sheet 01</a>
+    <a class="back" href={url('/#projects')}>← Back to sheet 01</a>
     <div class="fig">Dwg {p.no} — Detail · {p.year}</div>
     <h1>{p.name}</h1>
     <p>{p.summary}</p>
@@ -34,7 +35,7 @@ const { project: p, next } = Astro.props;
     </div>
     <div class="btns">
       <a class="btn" href={p.source}>Source</a>
-      <a class="btn" href={`/dwg/${next.id}/`}>Next drawing →</a>
+      <a class="btn" href={url(`/dwg/${next.id}/`)}>Next drawing →</a>
     </div>
   </section>
 </Sheet>
