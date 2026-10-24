@@ -1,0 +1,124 @@
+---
+// Sheet 01: general arrangement — all seven sections plus the title block.
+import Sheet from '../layouts/Sheet.astro';
+import Dimension from '../components/Dimension.astro';
+import { SITE, PROJECTS, SKILLS, EXPERIENCE, POSTS, OSS } from '../data/site';
+import { url } from '../lib/url';
+
+const stripUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/, '');
+---
+
+<Sheet title={SITE.title} sheet="01">
+  <section id="hero" class="hero rule-bottom">
+    <div class="fig">Fig. 01 — General arrangement</div>
+    <h1>Software, drawn to specification.</h1>
+    <p>
+      I'm {SITE.owner}, a software engineer who builds backend systems and developer tooling. I care about
+      clear interfaces, measured tradeoffs, and code you can hand to someone else.
+    </p>
+    <div class="btns">
+      <a class="btn btn-solid" href="#projects">View drawings</a>
+      <a class="btn" href="#contact">Get in touch</a>
+    </div>
+    <Dimension label="8 yrs · production systems" />
+  </section>
+
+  <section id="about" class="split">
+    <div class="about">
+      <div class="label">Section A — About</div>
+      <p>
+        Eight years across fintech and infrastructure teams. I've led migrations from monoliths to services,
+        designed event pipelines that move billions of records a day, and mentored engineers into leads.
+      </p>
+      <p>Based in Berlin. Working remotely with teams in Europe and the US.</p>
+    </div>
+    <div id="skills" class="skills">
+      <div class="label">Section B — Bill of materials</div>
+      <div class="bom">
+        {SKILLS.map((s) => (
+          <>
+            <div>{s.k}</div>
+            <div>{s.v}</div>
+          </>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="projects rule-bottom">
+    <div class="section-head">
+      <h2>Drawings</h2>
+      <span class="label">Section C — Selected projects · click to open detail sheet</span>
+    </div>
+    <div class="cards">
+      {PROJECTS.map((p) => (
+        <a class="card" href={url(`/dwg/${p.id}/`)}>
+          <div class="card-meta"><span>Dwg {p.no}</span><span>{p.year}</span></div>
+          <div class="hatch" aria-hidden="true">{p.diagram}</div>
+          <div class="card-name">{p.name}</div>
+          <div class="card-summary">{p.summary}</div>
+          <div class="card-stack">{p.stack}</div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section id="experience" class="experience rule-bottom">
+    <div class="label">Section D — Revision history</div>
+    <div>
+      {EXPERIENCE.map((e) => (
+        <div class="rev">
+          <div class="rev-years">{e.years}</div>
+          <div>
+            <div class="rev-role">{e.role} <span>— {e.company}</span></div>
+            <div class="rev-note">{e.note}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="split">
+    <div id="writing" class="listing">
+      <div class="label">Section E — Notes &amp; writing</div>
+      <div>
+        {POSTS.map((w) => (
+          <a class="row" href={w.href}><span>{w.title}</span><small>{w.date}</small></a>
+        ))}
+      </div>
+    </div>
+    <div id="oss" class="listing">
+      <div class="label">Section F — Open source</div>
+      <div>
+        {OSS.map((o) => (
+          <a class="row" href={o.href}>
+            <span><strong>{o.name}</strong> <span class="muted">— {o.desc}</span></span>
+            <small>★ {o.stars}</small>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="split contact-grid">
+    <div class="contact">
+      <div class="label">Section G — Contact</div>
+      <h2>Open to interesting problems.</h2>
+      <p>Consulting, advisory, or a good conversation about systems design.</p>
+      <div class="contact-links">
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        <a href={SITE.github}>{stripUrl(SITE.github)}</a>
+        <a href={SITE.linkedin}>{stripUrl(SITE.linkedin)}</a>
+      </div>
+    </div>
+    <dl class="title-block">
+      <div><dt>Project</dt><dd class="tb-project">{SITE.owner} — Portfolio</dd></div>
+      <div><dt>Drawn by</dt><dd>{SITE.owner}</dd></div>
+      <div><dt>Checked</dt><dd>CI · Passing</dd></div>
+      <div><dt>Scale</dt><dd>1 : 1</dd></div>
+      <div><dt>Date</dt><dd>Sep 2026</dd></div>
+      <div><dt>Rev</dt><dd>04</dd></div>
+      <div><dt>Sheet</dt><dd>01 / 02</dd></div>
+    </dl>
+  </section>
+</Sheet>

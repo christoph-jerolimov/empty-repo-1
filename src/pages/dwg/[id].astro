@@ -1,0 +1,41 @@
+---
+// Sheet 02: one prerendered detail page per project.
+import Sheet from '../../layouts/Sheet.astro';
+import Dimension from '../../components/Dimension.astro';
+import { SITE, PROJECTS } from '../../data/site';
+import { url } from '../../lib/url';
+
+export function getStaticPaths() {
+  return PROJECTS.map((project, i) => ({
+    params: { id: project.id },
+    props: { project, next: PROJECTS[(i + 1) % PROJECTS.length] },
+  }));
+}
+
+const { project: p, next } = Astro.props;
+---
+
+<Sheet title={`${p.name} — ${SITE.owner}`} description={p.summary} sheet="02">
+  <section class="detail">
+    <a class="back" href={url('/#projects')}>← Back to sheet 01</a>
+    <div class="fig">Dwg {p.no} — Detail · {p.year}</div>
+    <h1>{p.name}</h1>
+    <p>{p.summary}</p>
+    <div class="hatch" aria-hidden="true">{p.diagram} — architecture diagram / screenshot</div>
+    <Dimension label={p.metric} />
+    <div class="spec">
+      <div><div class="label">Problem</div><p>{p.problem}</p></div>
+      <div><div class="label">Approach</div><p>{p.approach}</p></div>
+      <div>
+        <div class="label">Specification</div>
+        <div class="spec-list">
+          Role — {p.role}<br />Stack — {p.stack}<br />Duration — {p.duration}
+        </div>
+      </div>
+    </div>
+    <div class="btns">
+      <a class="btn" href={p.source}>Source</a>
+      <a class="btn" href={url(`/dwg/${next.id}/`)}>Next drawing →</a>
+    </div>
+  </section>
+</Sheet>
